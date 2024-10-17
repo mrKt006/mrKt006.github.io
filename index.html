@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>比大小</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .card { font-size: 2em; margin: 20px; }
+        #computerCard { color: red; }
+        #userCard { color: black; }
+        button { padding: 10px 20px; font-size: 1em; }
+        #results { margin-top: 20px; }
+        .win { color: green; }
+        .lose { color: red; }
+        #progress { font-size: 1.5em; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<h1>比大小</h1>
+<div class="card" id="computerCard">对手: ?</div>
+<div class="card" id="userCard">你: ?</div>
+<button onclick="drawCards()">抽牌</button>
+<div id="progress">回合数: 0/10</div>
+<div id="results"></div>
+
+<script>
+    let rounds = 0;
+    const results = [];
+
+    function drawCards() {
+        const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+        const computerCard = cards[Math.floor(Math.random() * cards.length)];
+        const userCard = cards[Math.floor(Math.random() * cards.length)];
+
+        document.getElementById('computerCard').innerText = '对手: ?';
+        document.getElementById('userCard').innerText = '你: ' + userCard;
+
+        rounds++;
+        updateProgress();
+
+        results.push({ round: rounds, computerCard, userCard });
+
+        if (rounds >= 10) {
+            displayResults();
+        }
+    }
+
+    function updateProgress() {
+        document.getElementById('progress').innerText = '进度: ' + rounds + '/10';
+    }
+
+    function displayResults() {
+        let resultText = '<h2>每一轮结果:</h2>';
+        results.forEach(result => {
+            const winner = result.userCard > result.computerCard ? '<span class="win">你赢了</span>' :
+                           result.userCard < result.computerCard ? '<span class="lose">你输了</span>' : '平局';
+            resultText += `第 ${result.round} 轮: 对手牌 ${result.computerCard} - 你 ${result.userCard} (${winner})<br>`;
+        });
+        document.getElementById('results').innerHTML = resultText;
+        resetGame();
+    }
+
+    function resetGame() {
+        rounds = 0;
+        results.length = 0; // 清空结果
+        updateProgress();
+        document.getElementById('computerCard').innerText = '对手: ?';
+        document.getElementById('userCard').innerText = '你: ?';
+    }
+</script>
+
+</body>
+</html>
